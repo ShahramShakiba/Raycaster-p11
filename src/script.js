@@ -75,9 +75,9 @@ const tick = () => {
   prevTime - elapsedTime;
 
   //=== Animate Objects
-  object1.position.y = Math.sin(deltaTime * 0.8) * 1.3;
-  object2.position.y = Math.sin(deltaTime * 1) * 1.3;
-  object3.position.y = Math.sin(deltaTime * 1.3) * 1.3;
+  object1.position.y = Math.sin(deltaTime * 0.8) * 1.5;
+  object2.position.y = Math.sin(deltaTime * 1) * 1.5;
+  object3.position.y = Math.sin(deltaTime * 1.3) * 1.5;
 
   //=== Cast a ray
   const rayOrigin = new THREE.Vector3(-3, 0, 0);
@@ -88,7 +88,17 @@ const tick = () => {
 
   const objectsContainer = [object1, object2, object3];
   const intersects = raycaster.intersectObjects(objectsContainer);
-  console.log(intersects.length);
+  // console.log(intersects.length);
+
+  // Force the objects to have the main color then...
+  for (const obj of objectsContainer) {
+    obj.material.color.set('#b9ca3f');
+  }
+
+  // Change the color of those who intersect with the ray
+  for (const intersect of intersects) {
+    intersect.object.material.color.set('#0000ff');
+  }
 
   controls.update();
   renderer.render(scene, camera);
