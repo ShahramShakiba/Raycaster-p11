@@ -2,6 +2,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import { log } from 'three/examples/jsm/nodes/Nodes.js';
 
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
@@ -12,9 +13,12 @@ let height = window.innerHeight;
 
 //================== Model ========================
 const gltfLoader = new GLTFLoader();
+let model = null;
+
 gltfLoader.load('./models/Duck/glTF-Binary/Duck.glb', (gltf) => {
-  gltf.scene.position.y = -1.2;
-  scene.add(gltf.scene);
+  model = gltf.scene;
+  model.position.y = -1.2;
+  scene.add(model);
 });
 
 //================== Objects ========================
@@ -34,7 +38,6 @@ object2.updateMatrixWorld();
 
 const object3 = new THREE.Mesh(
   new THREE.CylinderGeometry(0.5, 0.5, 1.5),
-
   new THREE.MeshBasicMaterial({ color: '#b9ca3f' })
 );
 object3.position.x = 2;
@@ -103,11 +106,11 @@ window.addEventListener('click', () => {
         break;
 
       case object2:
-        console.log('Click on Cylinder !');
+        console.log('Click on Cone !');
         break;
 
       case object3:
-        console.log('Click on Cone !');
+        console.log('Click on Cylinder !');
         break;
     }
   }
@@ -156,6 +159,18 @@ const tick = () => {
 
     // nothing intersecting
     currentIntersect = null;
+  }
+
+  //=== intersect with Model
+  if (model) {
+    const modelIntersect = raycaster.intersectObject(model);
+    // console.log(modelIntersect);
+
+    if (modelIntersect.length) {
+      model.scale.set(1.2, 1.2, 1.2);
+    } else {
+      model.scale.set(1, 1, 1);
+    }
   }
 
   controls.update();
