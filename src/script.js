@@ -79,7 +79,20 @@ window.addEventListener('mousemove', (e) => {
 
 window.addEventListener('click', () => {
   if (currentIntersect) {
-    console.log('Click on an Object');
+    // Which Object is clicked
+    switch (currentIntersect.object) {
+      case object1:
+        console.log('Click on Object1 !');
+        break;
+
+      case object2:
+        console.log('Click on Object2 !');
+        break;
+
+      case object3:
+        console.log('Click on Object3 !');
+        break;
+    }
   }
 });
 
