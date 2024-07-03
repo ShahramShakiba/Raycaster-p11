@@ -1,10 +1,11 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 import * as THREE from 'three';
+import { log } from 'three/examples/jsm/nodes/Nodes.js';
 
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
-const gui = new GUI({ title: 'Physics' });
+const gui = new GUI();
 
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -65,14 +66,100 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
+//==================== Cursor ========================
+const mouse = new THREE.Vector2();
+
+window.addEventListener('mousemove', (e) => {
+  // We need a value between -1 to 1
+  mouse.x = (e.clientX / width) * 2 - 1;
+  mouse.y = -(e.clientY / height) * 2 + 1;
+
+  // console.log(mouse);
+});
+
+window.addEventListener('click', () => {
+  if (currentIntersect) {
+    console.log('Click on an Object');
+  }
+});
+
 //=================== Animate ========================
 const clock = new THREE.Clock();
 let prevTime = 0;
+
+let currentIntersect = null;
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   const deltaTime = elapsedTime - prevTime;
   prevTime - elapsedTime;
+
+  //=== Animate Objects
+  object1.position.y = Math.sin(deltaTime * 0.8) * 1.5;
+  object2.position.y = Math.sin(deltaTime * 1) * 1.5;
+  object3.position.y = Math.sin(deltaTime * 1.3) * 1.5;
+
+  raycaster.setFromCamera(mouse, camera);
+  const objectsContainer = [object1, object2, object3];
+  const intersects = raycaster.intersectObjects(objectsContainer);
+  // console.log(intersects.length);
+
+  // Force the objects to have the main color then...
+  for (const obj of objectsContainer) {
+    obj.material.color.set('#c1d42c');
+  }
+
+  // Change the color of those who intersect with the ray
+  for (const intersect of intersects) {
+    intersect.object.material.color.set('#6a53be'); // purple
+  }
+
+  // If you like to show a message or hide it
+  if (intersects.length) {
+    if (currentIntersect === null) {
+      console.log('Mouse Entered!');
+    }
+    // something intersecting
+    currentIntersect = intersects[0];
+  } else {
+    if (currentIntersect) {
+      console.log('Mouse Leaved!');
+    }
+
+    // nothing intersecting
+    currentIntersect = null;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+  window.requestAnimationFrame(tick);
+};
+
+tick();
+
+/* Static Objects - ray casting
+
+const raycaster = new THREE.Raycaster();
+
+const rayOrigin = new THREE.Vector3(-3, 0, 0);
+// Direction must have a length of 1, otherwise it should be normalized
+const rayDirection = new THREE.Vector3(10, 0, 0);
+// console.log(rayDirection.length());
+rayDirection.normalize();
+// console.log(rayDirection.length());
+
+raycaster.set(rayOrigin, rayDirection);
+
+const intersect = raycaster.intersectObject(object1);
+console.log(intersect);
+
+const intersects = raycaster.intersectObjects([object1, object2, object3]);
+console.log(intersects);
+*/
+
+/* Dynamic Objects - ray casting 
+- inside tick()
+
 
   //=== Animate Objects
   object1.position.y = Math.sin(deltaTime * 0.8) * 1.5;
@@ -92,37 +179,11 @@ const tick = () => {
 
   // Force the objects to have the main color then...
   for (const obj of objectsContainer) {
-    obj.material.color.set('#b9ca3f');
+    obj.material.color.set('#c1d42c');
   }
 
   // Change the color of those who intersect with the ray
   for (const intersect of intersects) {
-    intersect.object.material.color.set('#0000ff');
+    intersect.object.material.color.set('#6a53be'); // purple
   }
-
-  controls.update();
-  renderer.render(scene, camera);
-  window.requestAnimationFrame(tick);
-};
-
-tick();
-
-/* Static - raycaster
-
-const raycaster = new THREE.Raycaster();
-
-const rayOrigin = new THREE.Vector3(-3, 0, 0);
-// Direction must have a length of 1, otherwise it should be normalized
-const rayDirection = new THREE.Vector3(10, 0, 0);
-// console.log(rayDirection.length());
-rayDirection.normalize();
-// console.log(rayDirection.length());
-
-raycaster.set(rayOrigin, rayDirection);
-
-const intersect = raycaster.intersectObject(object1);
-console.log(intersect);
-
-const intersects = raycaster.intersectObjects([object1, object2, object3]);
-console.log(intersects);
 */
