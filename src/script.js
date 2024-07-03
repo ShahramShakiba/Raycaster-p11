@@ -1,7 +1,7 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 import * as THREE from 'three';
-import { log } from 'three/examples/jsm/nodes/Nodes.js';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
@@ -9,6 +9,13 @@ const gui = new GUI();
 
 let width = window.innerWidth;
 let height = window.innerHeight;
+
+//================== Model ========================
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('./models/Duck/glTF-Binary/Duck.glb', (gltf) => {
+  gltf.scene.position.y = -1.2;
+  scene.add(gltf.scene);
+});
 
 //================== Objects ========================
 const object1 = new THREE.Mesh(
@@ -20,13 +27,14 @@ object1.position.x = -2;
 object1.updateMatrixWorld();
 
 const object2 = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.5, 0.5, 1.5),
+  new THREE.ConeGeometry(0.7, 1),
   new THREE.MeshBasicMaterial({ color: '#b9ca3f' })
 );
 object2.updateMatrixWorld();
 
 const object3 = new THREE.Mesh(
-  new THREE.ConeGeometry(0.7, 1),
+  new THREE.CylinderGeometry(0.5, 0.5, 1.5),
+
   new THREE.MeshBasicMaterial({ color: '#b9ca3f' })
 );
 object3.position.x = 2;
@@ -36,6 +44,14 @@ scene.add(object1, object2, object3);
 
 //================ Raycaster ========================
 const raycaster = new THREE.Raycaster();
+
+//================= Light ==========================
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight('#ffffff', 1.6);
+directionalLight.position.set(1, 2, 3);
+scene.add(directionalLight);
 
 //================= Camera ==========================
 const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
@@ -68,6 +84,7 @@ window.addEventListener('resize', () => {
 
 //==================== Cursor ========================
 const mouse = new THREE.Vector2();
+let currentIntersect = null;
 
 window.addEventListener('mousemove', (e) => {
   // We need a value between -1 to 1
@@ -82,15 +99,15 @@ window.addEventListener('click', () => {
     // Which Object is clicked
     switch (currentIntersect.object) {
       case object1:
-        console.log('Click on Object1 !');
+        console.log('Click on Sphere !');
         break;
 
       case object2:
-        console.log('Click on Object2 !');
+        console.log('Click on Cylinder !');
         break;
 
       case object3:
-        console.log('Click on Object3 !');
+        console.log('Click on Cone !');
         break;
     }
   }
@@ -99,8 +116,6 @@ window.addEventListener('click', () => {
 //=================== Animate ========================
 const clock = new THREE.Clock();
 let prevTime = 0;
-
-let currentIntersect = null;
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
@@ -113,7 +128,7 @@ const tick = () => {
   object3.position.y = Math.sin(deltaTime * 1.3) * 1.5;
 
   raycaster.setFromCamera(mouse, camera);
-  const objectsContainer = [object1, object2, object3];
+  const objectsContainer = [object1, object3];
   const intersects = raycaster.intersectObjects(objectsContainer);
   // console.log(intersects.length);
 
@@ -130,13 +145,13 @@ const tick = () => {
   // If you like to show a message or hide it
   if (intersects.length) {
     if (currentIntersect === null) {
-      console.log('Mouse Entered!');
+      // console.log('Mouse Entered!');
     }
     // something intersecting
     currentIntersect = intersects[0];
   } else {
     if (currentIntersect) {
-      console.log('Mouse Leaved!');
+      // console.log('Mouse Leaved!');
     }
 
     // nothing intersecting
