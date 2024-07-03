@@ -36,21 +36,6 @@ scene.add(object1, object2, object3);
 //================ Raycaster ========================
 const raycaster = new THREE.Raycaster();
 
-const rayOrigin = new THREE.Vector3(-3, 0, 0);
-// Direction must have a length of 1, otherwise it should be normalized
-const rayDirection = new THREE.Vector3(10, 0, 0);
-// console.log(rayDirection.length());
-rayDirection.normalize();
-// console.log(rayDirection.length());
-
-raycaster.set(rayOrigin, rayDirection);
-
-const intersect = raycaster.intersectObject(object1);
-console.log(intersect);
-
-const intersects = raycaster.intersectObjects([object1, object2, object3]);
-console.log(intersects);
-
 //================= Camera ==========================
 const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
 camera.position.z = 4;
@@ -82,9 +67,28 @@ window.addEventListener('resize', () => {
 
 //=================== Animate ========================
 const clock = new THREE.Clock();
+let prevTime = 0;
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+  const deltaTime = elapsedTime - prevTime;
+  prevTime - elapsedTime;
+
+  //=== Animate Objects
+  object1.position.y = Math.sin(deltaTime * 0.8) * 1.3;
+  object2.position.y = Math.sin(deltaTime * 1) * 1.3;
+  object3.position.y = Math.sin(deltaTime * 1.3) * 1.3;
+
+  //=== Cast a ray
+  const rayOrigin = new THREE.Vector3(-3, 0, 0);
+  const rayDirection = new THREE.Vector3(1, 0, 0);
+  rayDirection.normalize();
+
+  raycaster.set(rayOrigin, rayDirection);
+
+  const objectsContainer = [object1, object2, object3];
+  const intersects = raycaster.intersectObjects(objectsContainer);
+  console.log(intersects.length);
 
   controls.update();
   renderer.render(scene, camera);
@@ -92,3 +96,23 @@ const tick = () => {
 };
 
 tick();
+
+/* Static - raycaster
+
+const raycaster = new THREE.Raycaster();
+
+const rayOrigin = new THREE.Vector3(-3, 0, 0);
+// Direction must have a length of 1, otherwise it should be normalized
+const rayDirection = new THREE.Vector3(10, 0, 0);
+// console.log(rayDirection.length());
+rayDirection.normalize();
+// console.log(rayDirection.length());
+
+raycaster.set(rayOrigin, rayDirection);
+
+const intersect = raycaster.intersectObject(object1);
+console.log(intersect);
+
+const intersects = raycaster.intersectObjects([object1, object2, object3]);
+console.log(intersects);
+*/
