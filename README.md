@@ -26,7 +26,7 @@
 - _`  Drag and Drop : `_  <br/>  By detecting which object is being clicked and dragged, developers can implement drag-and-drop functionality within the 3D space.
   
 #### 3. Collision Detection and Physics
-- _`  Simple Collision Detection : `_  <br/>  For certain types of collision detection, raycasting can be a straightforward and efficient method. For example, checking if a projectile hits a target or if a character's movement path is obstructed.
+- _`  Simple Collision Detection : `_  <br/>  For certain types of collision detection, raycasting can be a straightforward and efficient method. For example, checking if a projectile hits a target or if there ia a wall in front of the player or test if the laser gun hit the something.
 - _`  Physics Interactions : `_  <br/>  While more complex physics interactions typically require a physics engine, raycasting can still be used for simpler or preliminary checks.
 
 #### 4. Line of Sight and Visibility 
@@ -34,7 +34,7 @@
 - _`  Obstacle Detection : `_  <br/> By casting rays from a character or sensor, you can detect obstacles in the environment and respond accordingly, such as avoiding collisions or triggering events.
 
 #### 5. Environmental Interaction
-- _`  Detecting Interactions with the Environment : `_  <br/> Raycasting can be used to detect interactions between characters and the environment, such as stepping on specific areas, triggering events when entering certain zones, or picking up items.
+- _`  Detecting Interactions with the Environment : `_  <br/> Raycasting can be used to detect interactions between characters and the environment, such as stepping on specific areas, triggering events when entering certain zones, show an alert message if the spaceship is heading toward a planet or picking up items.
 
 <br/>  <br/> 
 
