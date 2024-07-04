@@ -60,15 +60,10 @@ The raycaster in Three.js is an essential tool for creating interactive 3D appli
 
  <br/> 
  
-<!-------- try it live -------->
-#### _Give it a go in real-time and give me a Star_ &nbsp; <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" alt="Glowing Star" width="25"  /> <a href="" target="_blank"> &nbsp; _Raycaster_ </a> 
-
-<br/>
-
 <!--------- Video --------->
 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Clapper%20Board.webp" alt="Clapper Board" width="35" /> &nbsp; 
 
-
+https://github.com/ShahramShakiba/Raycaster-p11/assets/110089830/fec21cb9-7e1a-4222-baa6-6aff10ac5c2d
 
   <br/> 
 
